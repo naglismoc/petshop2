@@ -5,15 +5,50 @@ require __DIR__."/Order.php";
 session_start();
 
 
-new Order(10);
-new Order(10);
 // print_r($_SESSION['orders']);
+
+if(isset($_POST['sell'])){
+    if(isset( $_SESSION['orders'][$_POST['category']][$_POST['name']])){
+        $_SESSION['petshop'][$_POST['category']][$_POST['name']]->status=2;
+        $_SESSION['orders'][$_POST['category']][$_POST['name']]->status=1;
+        // print_r($_SESSION['orders'][$_POST['category']][$_POST['name']]);
+        // die;
+   }else{
+        $_SESSION['petshop'][$_POST['category']][$_POST['name']]->status=1;
+        $_SESSION['totalLoss']-=$_SESSION['petshop'][$_POST['category']][$_POST['name']]->price;
+        
+   }
+  
+}
 
 if(isset($_GET['feedc'])){
     $_SESSION['petshop'][$_GET['feedc']][$_GET['feedn']]->lastFed = time();
+    $_SESSION['totalLoss']-=3;
     header("Location: index.php");
-    $_SESSION['food']-=3;
 }
+if(rand(0,5)==1){
+    switch (rand(0,3)) {
+        case 0:
+            new Pet("house pet","dog");
+            break;
+        case 1:
+            new Pet("reptile","snake");
+            break;
+        case 2:
+            new Pet('fish','goldfish');
+            break;
+        case 3:
+            new Pet('bird','parrot'); 
+            break;
+    }
+
+}
+// new Pet("house pet","dog");
+// new Pet("house pet","dog");
+// new Pet("reptile","snake");
+// new Pet("reptile","turtle");
+
+
 if(isset($_POST['refresh'])){
     session_destroy();
     session_start();
@@ -39,66 +74,16 @@ include 'sessionInfo.php';
     <title>Document</title>
 </head>
 <body>
-    
-<?php
-$totalVal = 0;
-$totalLoss = $_SESSION['food'];
-$totalProffit = 0;
-
-foreach ($_SESSION['petshop'] as $key => $category) {
-    foreach ($category as $key => $pet) {
-        $totalVal+=$pet->price;
-        if($pet->status==1){
-            $totalLoss-=$pet->price;
-        }
-    }
-}
-
-
-
-?>
-
-    <header>
-        <div id='stats'>
-            <h2>Bendra gyvuneliu verte :<?=$totalVal?></h2>
-            <h2>Nuostolis: <?=$totalLoss?></h2>
-            <h2>Uzdarbis: <?=$totalProffit?></h2>
-            <form action="" method="post">
-                <button type="submit" name="refresh">refresh</button>
-            </form>
-        </div>
-    </header>
-<div id="infoLine">
-   <?php include 'infoLine.php'?>
-</div>
-
-
-
-
-
-
-
-    <main>
-    <?php
-    if(($totalVal+$totalProffit) < (-1*$totalLoss)){
-        echo '<h1 style="text-align:center">GAME OVER</h1>';
-        die;
-    }
-    include 'generateTables.php';
-    ?>
-    <script> //reloadas
+    <?php include 'body.php'?>
+</body>
+<script> //reloadas
         $(document).ready(function(){
         setInterval(function(){
-            $("main").load('generateTables.php' );
+            $("#infoLine").load('infoLine.php' );
+            $("header").load('header.php' );
         }, 800);
         });
     </script>
-    </main>
-   
-    
-
-    
-</body>
 </html>
 
 
