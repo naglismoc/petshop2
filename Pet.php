@@ -13,7 +13,7 @@ class Pet{
         $this->species = $species;
         $this->price = 10;
         $this->lastFed = time();
-        $this->status = 0;
+        $this->status = 0;//0 kai gyvas, 1 kai mires, 2 kai parduotas
         $this->lasts = $_SESSION['species'][$species];
         $tempName ="";
         do{

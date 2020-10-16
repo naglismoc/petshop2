@@ -1,4 +1,7 @@
 <?php
+if(!isset($_SESSION['food'])){
+    $_SESSION['food']=0;
+}
 $_SESSION['species']['dog']=15;
 $_SESSION['species']['cat']=10;
 $_SESSION['species']['snake']=15;
